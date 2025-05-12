@@ -1,4 +1,3 @@
-import React from "react";
 import { Button } from "./ui/button";
 import { Heart, CarFront, Layout, ArrowLeft } from "lucide-react";
 import Link from "next/link";

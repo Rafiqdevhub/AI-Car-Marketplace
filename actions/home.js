@@ -25,3 +25,5 @@ export async function getFeaturedCars(limit = 3) {
     throw new Error("Error fetching featured cars:" + error.message);
   }
 }
+
+export async function processImageSearch() {}

@@ -18,7 +18,7 @@ export default function RootLayout({ children }) {
     <ClerkProvider>
       <html lang="en" className="min-h-screen antialiased">
         <head>
-          <link rel="icon" href="/logo-white.png" sizes="any" />
+          <link rel="icon" href="/logo.png" sizes="any" />
         </head>
         <body
           className={`${inter.className} flex min-h-screen flex-col bg-background text-foreground`}

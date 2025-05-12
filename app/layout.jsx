@@ -1,32 +1,36 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import FooterComponent from "@/components/FooterComponent";
+import HeaderComponent from "@/components/HeaderComponent";
+import { Toaster } from "sonner";
+import { ClerkProvider } from "@clerk/nextjs";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "CarSahulat",
+  title: "CarSahulat - Pakistan's Smart Car Marketplace",
   description:
-    'CarSahulat is Pakistan’s first AI-powered car marketplace that makes buying and selling cars fast, easy, and reliable. From intelligent price suggestions to image-based search and instant chat with sellers, CarSahulat brings convenience ("sahulat") right to your fingertips. Whether you\'re upgrading, selling, or just browsing — let AI do the hard work for you.',
+    "CarSahulat is Pakistan's smart car marketplace, using AI to make buying and selling vehicles fast, easy, and secure.",
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <main className="min-h-screen">{children}</main>
-        <FooterComponent />
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en" className="min-h-screen antialiased">
+        <head>
+          <link rel="icon" href="/logo-white.png" sizes="any" />
+        </head>
+        <body
+          className={`${inter.className} flex min-h-screen flex-col bg-background text-foreground`}
+        >
+          <HeaderComponent />
+          <main className="flex-1">
+            <div className="container max-w-7xl mx-auto px-4">{children}</div>
+          </main>
+          <Toaster richColors position="top-center" />
+          <FooterComponent />
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

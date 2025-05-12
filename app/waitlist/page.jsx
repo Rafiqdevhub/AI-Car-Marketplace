@@ -1,31 +1,25 @@
 "use client";
 
 import React from "react";
+import Head from "next/head";
 
 export default function WaitlistPage() {
   return (
-    <section className="container max-w-7xl mx-auto px-4 py-6">
-      <div className="flex flex-col gap-6">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-2xl sm:text-3xl font-bold">Join Our Waitlist</h1>
-          <p className="text-muted-foreground">
-            Be the first to experience CarSahulat when we launch.
-          </p>
-        </div>
-        <div className="w-full rounded-lg border bg-card">
+    <>
+      <Head>
+        <title>Waitlist</title>
+      </Head>
+      <div className="mt-20 fixed w-full">
+        <div className="aspect-video w-full">
           <iframe
-            style={{
-              width: "100%",
-              height: "calc(100vh - 16rem)",
-              minHeight: "500px",
-            }}
+            style={{ width: "100%" }}
+            height="569"
             src="https://carsahulat.created.app"
-            title="CarSahulat Waitlist"
+            title="CareSahulat Waitlist"
             frameBorder="0"
-            className="rounded-lg"
-          />
+          ></iframe>
         </div>
       </div>
-    </section>
+    </>
   );
 }

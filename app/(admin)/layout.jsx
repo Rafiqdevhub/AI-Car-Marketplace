@@ -1,7 +1,14 @@
 import HeaderComponent from "@/components/HeaderComponent";
 import Sidebar from "./admin/_components/Sidebar";
+import { getAdmin } from "@/actions/admin";
+import { notFound } from "next/navigation";
 
-const AdminLayout = () => {
+const AdminLayout = async ({ children }) => {
+  const admin = await getAdmin();
+
+  if (!admin.authorized) {
+    return notFound();
+  }
   return (
     <div className="h-full">
       <HeaderComponent isAdminPage={true} />

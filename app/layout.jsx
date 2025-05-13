@@ -25,7 +25,7 @@ export default function RootLayout({ children }) {
         >
           <HeaderComponent />
           <main className="flex-1">
-            <div className="container max-w-7xl mx-auto px-4">{children}</div>
+            <div className="min-h-screen">{children}</div>
           </main>
           <Toaster richColors position="top-center" />
           <FooterComponent />

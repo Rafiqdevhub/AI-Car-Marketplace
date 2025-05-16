@@ -76,8 +76,8 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 1. Clone the repository:
 
 ```powershell
-git clone <repository-url>
-cd ai-car-marketplace
+git clone https://github.com/Rafiqdevhub/AI-Car-Marketplace.git
+cd AI-Car-Marketplace
 ```
 
 2. Install dependencies:

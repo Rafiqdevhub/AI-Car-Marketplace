@@ -11,8 +11,8 @@ import { getFeaturedCars } from "@/actions/home";
 import Link from "next/link";
 import Image from "next/image";
 import { bodyTypes, carMakes, faqItems } from "@/lib/data";
-import CarCard from "@/components/CarCard";
 import { HomeSearch } from "@/components/HomeSearch";
+import { CarCard } from "@/components/CarCard";
 
 export default async function Home() {
   const featuredCars = await getFeaturedCars();
@@ -20,13 +20,14 @@ export default async function Home() {
   return (
     <div className="flex flex-col pt-20">
       {/* Hero Section with Gradient Title */}
-      <section className="relative py-16 md:py-28 dotted-background">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="mb-8">
-            <h1 className="text-5xl md:text-8xl mb-4 gradient-title">
-              Find your Dream Car with CarSahulat
+      <section className="relative py-20 md:py-32 dotted-background overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-blue-50/50 to-transparent dark:from-blue-950/50 pointer-events-none"></div>
+        <div className="max-w-5xl mx-auto text-center px-4 relative">
+          <div className="space-y-6 md:space-y-8">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-800 dark:from-blue-400 dark:to-blue-600 leading-tight tracking-tight">
+              Find your Dream Car with CarSahulat AI
             </h1>
-            <p className="text-xl text-gray-500 mb-8 max-w-2xl mx-auto">
+            <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto font-medium leading-relaxed">
               Advanced AI Car Search and test drive from thousands of vehicles.
             </p>
           </div>

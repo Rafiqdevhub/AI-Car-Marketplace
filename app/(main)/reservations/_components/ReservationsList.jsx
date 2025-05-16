@@ -3,9 +3,9 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "lucide-react";
-import useFetch from "@/hooks/use-fetch";
-import { cancelTestDrive } from "@/actions/test-drive";
+import { cancelTestDrive } from "@/actions/testDrive";
 import { DriveTestCard } from "@/components/DriveTestCard";
+import useFetch from "@/hooks/useFetch";
 
 export function ReservationsList({ initialData }) {
   const {

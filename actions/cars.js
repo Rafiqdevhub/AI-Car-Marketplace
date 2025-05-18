@@ -266,10 +266,22 @@ export async function deleteCar(id) {
     const { userId } = await auth();
     if (!userId) throw new Error("Unauthorized");
 
-    // First, fetch the car to get its images
     const car = await db.car.findUnique({
       where: { id },
-      select: { images: true },
+      include: {
+        testDriveBookings: {
+          where: {
+            status: {
+              in: ["PENDING", "CONFIRMED"],
+            },
+          },
+          select: {
+            id: true,
+            status: true,
+            bookingDate: true,
+          },
+        },
+      },
     });
 
     if (!car) {
@@ -279,42 +291,56 @@ export async function deleteCar(id) {
       };
     }
 
-    // Delete the car from the database
+    // If there are any active test drive bookings, stop deletion
+    if (car.testDriveBookings && car.testDriveBookings.length > 0) {
+      const pendingCount = car.testDriveBookings.filter(
+        (b) => b.status === "PENDING"
+      ).length;
+      const confirmedCount = car.testDriveBookings.filter(
+        (b) => b.status === "CONFIRMED"
+      ).length;
+
+      return {
+        success: false,
+        error: "Cannot delete this car",
+        details: {
+          pendingBookings: pendingCount,
+          confirmedBookings: confirmedCount,
+          message: `This car has ${pendingCount} pending and ${confirmedCount} confirmed test drive bookings. Please handle these bookings before deleting the car.`,
+        },
+      };
+    }
+
     await db.car.delete({
       where: { id },
     });
 
-    // Delete the images from Supabase storage
+    // ✅ Delete Supabase images
     try {
       const cookieStore = cookies();
       const supabase = createClient(cookieStore);
 
-      // Extract file paths from image URLs
       const filePaths = car.images
         .map((imageUrl) => {
           const url = new URL(imageUrl);
-          const pathMatch = url.pathname.match(/\/car-images\/(.*)/);
+          const pathMatch = url.pathname.match(/\/carimages\/(.*)/);
           return pathMatch ? pathMatch[1] : null;
         })
         .filter(Boolean);
 
-      // Delete files from storage if paths were extracted
       if (filePaths.length > 0) {
         const { error } = await supabase.storage
-          .from("car-images")
+          .from("carimages")
           .remove(filePaths);
 
         if (error) {
           console.error("Error deleting images:", error);
-          // We continue even if image deletion fails
         }
       }
     } catch (storageError) {
       console.error("Error with storage operations:", storageError);
-      // Continue with the function even if storage operations fail
     }
 
-    // Revalidate the cars list page
     revalidatePath("/admin/cars");
 
     return {

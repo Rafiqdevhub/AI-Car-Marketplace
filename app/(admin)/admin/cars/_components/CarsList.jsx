@@ -114,15 +114,37 @@ export const CarsList = () => {
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     fetchCars(search);
-  };
-
-  // Handle delete car
+  }; // Handle delete car
   const handleDeleteCar = async () => {
     if (!carToDelete) return;
 
-    await deleteCarFn(carToDelete.id);
-    setDeleteDialogOpen(false);
-    setCarToDelete(null);
+    try {
+      const result = await deleteCarFn(carToDelete.id);
+
+      if (!result) {
+        toast.error("Failed to delete car");
+        return;
+      }
+
+      if (result.success === false) {
+        if (result.details) {
+          // Show detailed error message for active bookings
+          toast.error(result.details.message, {
+            description: "Please cancel or complete these bookings first.",
+            duration: 5000,
+          });
+        } else {
+          // Show generic error message
+          toast.error(result.error || "Failed to delete car");
+        }
+      }
+    } catch (error) {
+      toast.error("An error occurred while deleting the car");
+      console.error("Delete car error:", error);
+    } finally {
+      setDeleteDialogOpen(false);
+      setCarToDelete(null);
+    }
   };
 
   // Handle toggle featured status
@@ -298,7 +320,7 @@ export const CarsList = () => {
                             >
                               Mark as Sold
                             </DropdownMenuItem>
-                            <DropdownMenuSeparator />
+                            <DropdownMenuSeparator />{" "}
                             <DropdownMenuItem
                               className="text-red-600"
                               onClick={() => {
@@ -309,6 +331,44 @@ export const CarsList = () => {
                               <Trash2 className="mr-2 h-4 w-4" />
                               Delete
                             </DropdownMenuItem>
+                            {/* Delete Confirmation Dialog */}
+                            <Dialog
+                              open={deleteDialogOpen}
+                              onOpenChange={setDeleteDialogOpen}
+                            >
+                              <DialogContent>
+                                <DialogHeader>
+                                  <DialogTitle>Delete Car</DialogTitle>
+                                  <DialogDescription>
+                                    Are you sure you want to delete{" "}
+                                    {carToDelete?.make} {carToDelete?.model}?
+                                    This action cannot be undone. All associated
+                                    data, including images and records, will be
+                                    permanently deleted.
+                                  </DialogDescription>
+                                </DialogHeader>
+                                <DialogFooter className="gap-2 sm:gap-0">
+                                  <Button
+                                    variant="outline"
+                                    onClick={() => setDeleteDialogOpen(false)}
+                                    disabled={deletingCar}
+                                  >
+                                    Cancel
+                                  </Button>
+                                  <Button
+                                    variant="destructive"
+                                    onClick={handleDeleteCar}
+                                    disabled={deletingCar}
+                                    className="gap-2"
+                                  >
+                                    {deletingCar && (
+                                      <Loader2 className="h-4 w-4 animate-spin" />
+                                    )}
+                                    {deletingCar ? "Deleting..." : "Delete Car"}
+                                  </Button>
+                                </DialogFooter>
+                              </DialogContent>
+                            </Dialog>
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </TableCell>
